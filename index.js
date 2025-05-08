@@ -26,6 +26,7 @@ mongoose
 
 app.use("/api/products", router);
 app.use("/api/users", router2);
+
 app.use((req, res) => {
   return res.status(500).json({
     status: 500,
@@ -35,4 +36,4 @@ app.use((req, res) => {
 
 module.exports = app;
 
-app.listen(3000);
+// app.listen(3000);
