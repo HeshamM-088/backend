@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const router = require("./routes/products");
 const app = express();
 require("dotenv").config();
 const mongoose = require("mongoose");
@@ -22,6 +23,8 @@ app.use("/", (req, res) => {
   });
 });
 
+app.use("/api/products", router);
+
 app.use((req, res) => {
   return res.status(500).json({
     status: 500,
@@ -30,3 +33,5 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
+app.listen(3000);
