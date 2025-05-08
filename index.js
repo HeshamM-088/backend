@@ -5,6 +5,7 @@ const app = express();
 require("dotenv").config();
 const mongoose = require("mongoose");
 const router2 = require("./routes/users");
+const router3 = require("./routes/orderRoutes");
 app.use(cors());
 app.use(express.json());
 
@@ -26,6 +27,7 @@ mongoose
 
 app.use("/api/products", router);
 app.use("/api/users", router2);
+app.use("/api/users", router3);
 
 app.use((req, res) => {
   return res.status(500).json({
