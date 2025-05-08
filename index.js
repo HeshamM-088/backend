@@ -27,7 +27,7 @@ mongoose
 
 app.use("/api/products", router);
 app.use("/api/users", router2);
-app.use("/api/users", router3);
+app.use("/api/orders", router3);
 
 app.use((req, res) => {
   return res.status(500).json({
