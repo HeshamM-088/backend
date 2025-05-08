@@ -17,11 +17,11 @@ mongoose
     console.log(err);
   });
 
-app.use("/", (req, res) => {
-  return res.status(200).json({
-    msg: "done for home page",
-  });
-});
+// app.use("/", (req, res) => {
+//   return res.status(200).json({
+//     msg: "done for home page",
+//   });
+// });
 
 app.use("/api/products", router);
 
