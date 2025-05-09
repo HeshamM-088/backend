@@ -24,10 +24,21 @@ const addToCart = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    addUser.cartItems.push({
-      productId,
-      quantity,
-    });
+    if (addUser.cartItems.find((item) => item.productId == productId)) {
+      addUser.cartItems = addUser.cartItems.map((item) => {
+        if (item.productId == productId) {
+          let priv = item.quantity; 
+          return { productId, quantity: priv + 1 };
+        } else {
+          return item;
+        }
+      });
+    } else {
+      addUser.cartItems.push({
+        productId,
+        quantity,
+      });
+    }
 
     await addUser.save();
 
@@ -57,12 +68,21 @@ const deleteFromCart = async (req, res) => {
 
     const initialLength = user.cartItems.length;
 
-    user.cartItems = user.cartItems.filter(
-      (item) => !item.productId.equals(productId)
-    );
-
-    if (user.cartItems.length === initialLength) {
-      return res.status(404).json({ message: "Product not found in cart" });
+    const product = user.cartItems.find((item) => item.productId == productId);
+    if (product.quantity > 1) {
+      user.cartItems = user.cartItems.map((item) => {
+        if (item.productId == productId) {
+          let priv = item.quantity;
+          return { productId, quantity: priv - 1 };
+        } else {
+          return item;
+        }
+      });
+    }
+    else {
+      user.cartItems = user.cartItems.filter(
+        (item) => !item.productId.equals(productId)
+      );
     }
 
     await user.save();
@@ -84,16 +104,25 @@ const getCartItems = async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
-    const user = await User.findById(userId).populate("cartItems.productId");
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const cartItems = user.cartItems.map((item) => ({
-      product: item.productId, // full product document
-      quantity: item.quantity,
-    }));
+    // Array to hold the full product details
+    const cartItems = [];
+
+    // Use forEach to loop through cartItems and fetch full product details
+    for (const item of user.cartItems) {
+      const product = await Product.findById(item.productId); // Fetch product by productId
+      if (product) {
+        cartItems.push({
+          product, // Full product document
+          quantity: item.quantity,
+        });
+      }
+    }
 
     res.status(200).json({ cartItems });
   } catch (error) {
