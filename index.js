@@ -10,6 +10,7 @@ const cartRouter = require("./routes/cart");
 const wishlistRouter = require("./routes/wishlist");
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); //helps parse form-data fields
 
 const DB = process.env.DB;
 mongoose
