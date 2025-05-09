@@ -66,8 +66,6 @@ const deleteFromCart = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const initialLength = user.cartItems.length;
-
     const product = user.cartItems.find((item) => item.productId == productId);
     if (product.quantity > 1) {
       user.cartItems = user.cartItems.map((item) => {
