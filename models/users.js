@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
     name: {
         type: String, 
-        required :[true,"Username required !"]
+        required :[true,"Username required !"],
     },
     email: {
         type: String,
@@ -17,18 +17,19 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Password required !"],
+          min: [8, "Password must be at least 8 characters"],
     },
     role: {
         type: String,
         enum: ["user", "admin"],
-        default :"user"
+        default :"user",
     },
     cartItems: [
         {
           productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
             quantity: {
                 type: Number,
-                default: 1
+                default: 1,
             }
         },
       ],
@@ -36,11 +37,11 @@ const userSchema = new mongoose.Schema({
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "orders"}],
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     updatedAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     }
 
 });
