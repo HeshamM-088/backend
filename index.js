@@ -9,6 +9,7 @@ const router3 = require("./routes/orderRoutes");
 const cartRouter = require("./routes/cart");
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); //helps parse form-data fields
 
 const DB = process.env.DB;
 mongoose

@@ -7,13 +7,18 @@ const {
   createProduct,
   deleteProduct,
 } = require("../controllers/products");
+
+const multer = require("multer");
+const { storage } = require("../cloudinary/cloudinary"); // or ../config/cloudinary
+const upload = multer({ storage });
+
 //get, post, patch, delete actions setup
 
 //GET route to get all products
 router.get("/", getProducts);
 
 //POST route to create a new product
-router.post("/", createProduct);
+router.post("/", upload.single("image"), createProduct);
 
 //GET product by id
 router.get("/:id", getSingleProduct);

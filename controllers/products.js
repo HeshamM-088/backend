@@ -9,13 +9,49 @@ const getProducts = async (req, res) => {
   }
 };
 
+// const createProduct = async (req, res) => {
+//   try {
+//     const product = await Product.create(req.body); //check with the middleware
+
+//     res.status(201).json({ product });
+//   } catch {
+//     res.status(500).json({ msg: err });
+//   }
+// };
+
 const createProduct = async (req, res) => {
   try {
-    const product = await Product.create(req.body); //check with the middleware
+    const {
+      name,
+      description,
+      price,
+      category,
+      subcategory,
+      stock,
+      available,
+      rating,
+    } = req.body;
+
+    const image = req.file?.path;
+    if (!image) {
+      return res.status(400).json({ msg: "Image is required" });
+    }
+
+    const product = await Product.create({
+      name,
+      description,
+      price,
+      category,
+      subcategory,
+      image,
+      stock,
+      available,
+      rating,
+    });
 
     res.status(201).json({ product });
-  } catch {
-    res.status(500).json({ msg: err });
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
   }
 };
 
