@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-require("../models/product")
+require("./product")
+require("./orders")
 const bcrypt = require("bcrypt");
 
 
@@ -17,7 +18,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Password required !"],
-          min: [8, "Password must be at least 8 characters"],
+        minlength: [8, "Password must be at least 8 characters"],
     },
     role: {
         type: String,
@@ -26,14 +27,14 @@ const userSchema = new mongoose.Schema({
     },
     cartItems: [
         {
-          productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
+          productId: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
             quantity: {
                 type: Number,
                 default: 1,
             }
         },
       ],
-    wishlist: [{ type: mongoose.Schema.Types.ObjectId,  ref: "product" }],
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId,  ref: "products" }],
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "orders"}],
     createdAt: {
         type: Date,
