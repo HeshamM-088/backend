@@ -20,10 +20,6 @@ const userSchema = new mongoose.Schema({
         required: [true, "Password required !"],
         minlength: [8, "Password must be at least 8 characters"],
     },
-    image: {
-        type: String,
-        required: true,
-    },
     role: {
         type: String,
         enum: ["user", "admin"],
