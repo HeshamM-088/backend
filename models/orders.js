@@ -9,17 +9,15 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "shipped", "delivered", "cancelled"],
+      enum: ["pending", "shipped", "cancelled"],
       default: "pending",
     },
-    items: {
-      type: [Number],
-      required: true,
-      validate: {
-        validator: (arr) => arr.length > 0,
-        message: "At least one item is required in the order.",
+    items: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "products",
       },
-    },
+    ],
     shippingFee: {
       type: Number,
       required: true,

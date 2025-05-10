@@ -4,15 +4,18 @@ const {
   createOrder,
   getAllOrdersByUser,
   getSingleOrderByUser,
-} = require("../controllers/orderController");
+  cancelOrder,
+} = require("../controllers/orders");
 
 // Create order
-router3.post("/", createOrder);
+router3.post("/create", createOrder);
 
 // Get all orders for a specific user
-router3.get("/user/:userId", getAllOrdersByUser);
+router3.get("/user/all", getAllOrdersByUser);
 
 // Get single order for a user
-router3.get("/user/:userId/order/:orderId", getSingleOrderByUser);
+router3.get("/user/single", getSingleOrderByUser);
+
+router3.delete("/delete", cancelOrder);
 
 module.exports = router3;
