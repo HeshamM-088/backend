@@ -5,7 +5,7 @@ const app = express();
 require("dotenv").config();
 const mongoose = require("mongoose");
 const router2 = require("./routes/users");
-const router3 = require("./routes/orderRoutes");
+const router3 = require("./routes/orders");
 const cartRouter = require("./routes/cart");
 const wishlistRouter = require("./routes/wishlist");
 app.use(cors());
