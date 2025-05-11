@@ -5,7 +5,7 @@ const { deleteFromCart } = require("./cart");
 
 const getWishlistItems = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId  = req.params.uid;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
