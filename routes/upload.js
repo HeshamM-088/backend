@@ -1,14 +1,13 @@
 const express = require('express');
 const multer = require('multer');
-const { productStorage,userStorage } = require('../cloudinary'); // path to your config file
+const { storage } = require('../cloudinary'); // path to your config file
 
-const upload = multer({ productStorage });
-const userUpload = multer({ userStorage });
+const upload = multer({ storage });
 
-const router = express.Router();
+const uploadRouter = express.Router();
 
+// Assuming you have a Mongoose model like "Product"
 const Product = require('../models/product');
-const user = require("../models/users")
 
 router.post('/upload', upload.single('image'), async (req, res) => {
   try {
