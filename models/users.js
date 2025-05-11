@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
         enum: ["user", "admin"],
         default :"user",
     },
+    image: {
+        type: String,
+        required:true,
+        
+    },
     cartItems: [
         {
           productId: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
@@ -44,7 +49,7 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     }
-
+    
 });
 
 userSchema.pre("save", async function (next) {
