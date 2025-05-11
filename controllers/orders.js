@@ -1,3 +1,4 @@
+const orders = require("../models/orders");
 const Order = require("../models/orders");
 const User = require("../models/users");
 const mongoose = require("mongoose");
@@ -23,8 +24,8 @@ const createOrder = async (req, res) => {
       { $push: { orders: savedOrder._id } },
       { new: true }
     );
-
-    res.status(201).json(savedOrder);
+    const order = await savedOrder.populate("items");
+    res.status(201).json(order);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -32,7 +33,7 @@ const createOrder = async (req, res) => {
 
 const getAllOrdersByUser = async (req, res) => {
   try {
-    const userId  = req.params.uid;
+    const userId = req.params.uid;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: `Invalid User ID ${userId}` });
     }
@@ -57,7 +58,8 @@ const getAllOrdersByUser = async (req, res) => {
 
 const getSingleOrderByUser = async (req, res) => {
   try {
-    const userId = req.params.uid, orderId = req.params.oid;
+    const userId = req.params.uid,
+      orderId = req.params.oid;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
@@ -76,7 +78,9 @@ const getSingleOrderByUser = async (req, res) => {
     if (!user.orders.includes(orderId)) {
       return res
         .status(403)
-        .json({ error: `Order does not belong to this user ${userId + " " + orderId}` });
+        .json({
+          error: `Order does not belong to this user ${userId + " " + orderId}`,
+        });
     }
 
     const order = await Order.findById(orderId).populate("items");
@@ -116,7 +120,9 @@ const cancelOrder = async (req, res) => {
     user.orders = user.orders.filter((id) => id != orderId);
     await Order.deleteOne({ _id: orderId });
     await user.save();
-    res.status(200).json({ orders: user.orders });
+
+    const fullOrders = await Order.find({ _id: { $in: user.orders } }).populate("items");
+    res.status(200).json({ orders: fullOrders });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
