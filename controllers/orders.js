@@ -32,9 +32,9 @@ const createOrder = async (req, res) => {
 
 const getAllOrdersByUser = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId  = req.params.uid;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid User ID" });
+      return res.status(400).json({ message: `Invalid User ID ${userId}` });
     }
 
     const user = await User.findById(userId).populate({
@@ -57,7 +57,7 @@ const getAllOrdersByUser = async (req, res) => {
 
 const getSingleOrderByUser = async (req, res) => {
   try {
-    const { userId, orderId } = req.body;
+    const userId = req.params.uid, orderId = req.params.oid;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
@@ -76,7 +76,7 @@ const getSingleOrderByUser = async (req, res) => {
     if (!user.orders.includes(orderId)) {
       return res
         .status(403)
-        .json({ error: "Order does not belong to this user" });
+        .json({ error: `Order does not belong to this user ${userId + " " + orderId}` });
     }
 
     const order = await Order.findById(orderId).populate("items");
