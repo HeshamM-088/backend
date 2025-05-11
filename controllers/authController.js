@@ -17,10 +17,11 @@ exports.signup = async (req, res) => {
       });
     }
     const newUser = await User.create({
+      image: req.file ? req.file.path : null,
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
-      role: req.body.role || "user", // Only allow "user" from frontend
+      role: req.body.role || "user",
     });
 
     const token = createToken(newUser._id, newUser.role);
@@ -33,12 +34,13 @@ exports.signup = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
+        image: newUser.image,
       },
     });
   } catch (err) {
     res.status(400).json({
       status: "error",
-      message: err.message ,
+      message: err.message,
     });
   }
 };
