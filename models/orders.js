@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema(
     address: {
       type: String,
       required: true,
-      trim: true, // removes leading/trailing spaces
+      trim: true,
     },
     status: {
       type: String,
@@ -14,8 +14,16 @@ const orderSchema = new mongoose.Schema(
     },
     items: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "products",
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "products",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+          min: [1, "Quantity must be at least 1"],
+        },
       },
     ],
     shippingFee: {
@@ -29,7 +37,7 @@ const orderSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // adds createdAt and updatedAt automatically
+    timestamps: true,
   }
 );
 
