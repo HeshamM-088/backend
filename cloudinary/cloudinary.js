@@ -16,4 +16,13 @@ const storage = new CloudinaryStorage({
   },
 });
 
-module.exports = { cloudinary, storage };
+const userStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "users",
+    allowed_formats:["jpg", "png", "jpeg","svg"],
+  }
+})
+
+
+module.exports = { cloudinary, storage,userStorage };
