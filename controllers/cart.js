@@ -41,6 +41,12 @@ const addToCart = async (req, res) => {
     }
 
     await addUser.save();
+     // populate the cartItem with details
+    const populatedItems = await User.findById(userId)
+      .populate({
+        path: "cartItems.productId", // Assuming you have a reference to Product in cartItems
+       })
+      .lean();
 
     res.status(200).json({
       message: "Product added to cart successfully",
