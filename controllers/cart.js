@@ -58,7 +58,7 @@ const addToCart = async (req, res) => {
 
 const deleteFromCart = async (req, res) => {
   try {
-    const { productId, userId, quantity } = req.body;
+    const { productId, userId} = req.body;
     if (
       !mongoose.Types.ObjectId.isValid(productId) ||
       !mongoose.Types.ObjectId.isValid(userId)
@@ -70,32 +70,31 @@ const deleteFromCart = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    user.cartItems = user.cartItems.filter((item) => !item.productId.equals(productId));
+       await user.save();
 
-    const product = user.cartItems.find((item) => item.productId == productId);
-    if (product.quantity > 1) {
-      user.cartItems = user.cartItems.map((item) => {
-        if (item.productId == productId) {
-          let priv = item.quantity;
-          return { productId, quantity: Math.max(0, priv - quantity) };
+    // const product = user.cartItems.find((item) => item.productId == productId);
+    // if (product.quantity > 1) {
+    //   user.cartItems = user.cartItems.map((item) => {
+    //     if (item.productId == productId) {
+    //       let priv = item.quantity;
+    //       return { productId, quantity: Math.max(0, priv - quantity) };
           
-        } else {
-          return item;
-        }
-      });
-    }
-    else {
-      user.cartItems = user.cartItems.filter(
-        (item) => !item.productId.equals(productId)
-      );
-    }
+    //     } else {
+    //       return item;
+    //     }
+    //   });
+    // }
+    // else {
+    //   user.cartItems = user.cartItems.filter(
+    //     (item) => !item.productId.equals(productId)
+    //   );
+    // }
 
-    user.cartItems = user.cartItems.filter(item => Number(item.quantity) > 0);
-    await user.save();
+    // user.cartItems = user.cartItems.filter(item => Number(item.quantity) > 0);
+    // await user.save();
 
-    res.status(200).json({
-      message: "Product removed from cart",
-      cartItems: user.cartItems,
-    });
+    res.status(200).json({cartItems: user.cartItems});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
