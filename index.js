@@ -49,6 +49,10 @@ app.listen(PORT, () => {
 // //=======================
 // console.log("JWT_SECRET =", process.env.JWT_SECRET);
 
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+//=======================
 
 app.use((req, res) => {
   return res.status(404).json({
@@ -59,6 +63,4 @@ app.use((req, res) => {
 
 module.exports = app;
 
-// app.listen(3000, () => {
-//   console.log("Server running on http://localhost:3000");
-// });
+ 

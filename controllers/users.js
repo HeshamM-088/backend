@@ -14,7 +14,7 @@ const getAllusers = async (request, response) => {
 const getUser = async (request, response) => {
     try {
         const userId = request.params.id
-        const User = await users.findById(userId ,{ __v: false, password: false });
+        const User = await users.findById(userId ,{ __v: false, password: false }).populate("cartItems.productId").populate("wishlist");
         if (!User) {
             return response.status(404).json({ message: "User not found" })
         }
@@ -27,24 +27,6 @@ const getUser = async (request, response) => {
     }
         
 }
-// const addUser = async (request, response) => {
-//     try {
-//          const { name, email, password, role, cartItems, wishlist, orders, createdAt, updatedAt } = request.body;
-//         const image = request.file?.path;
-//         if (!image) {
-//       return response.status(400).json({ msg: "Image is required" });
-//     }
-//         const User = await users.create(
-//             { name, email, password, role,image, cartItems, wishlist, orders, createdAt, updatedAt}
-//         )
-//         return response.status(200).json({ User })
-           
-        
-//     } catch (error) {
-//         return response.status(500).json({ message:error.message })
-          
-//     }
-// }
 
 const editUser = async (request, response) => {
     try {
