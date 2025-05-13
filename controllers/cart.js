@@ -128,4 +128,35 @@ const getCartItems = async (req, res) => {
   }
 };
 
-module.exports = { addToCart, deleteFromCart, getCartItems };
+
+
+const editCart = async (req, res) => {
+   const { userId } = req.params;
+   const {  productId, quantity } = req.body;
+  if (
+      !mongoose.Types.ObjectId.isValid(productId) ||
+      !mongoose.Types.ObjectId.isValid(userId)
+    ) {
+      return res.status(400).json({ message: "Invalid product ID or user ID" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const item = user.cartItems.find(item => item.productId.toString() === productId);
+    if (!item) {
+      res.status(404).json({ message: "Product not found" });
+    }
+    if (quantity === 0) {
+      user.cartItems = user.cartItems.filter(item => item.productId.toString() !== productId);
+    } else {
+      item.quantity = quantity;
+      await user.save();
+      res.status(200).json({ cartItems: user.cartItems });
+    }
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+ 
+}
+
+module.exports = { addToCart, deleteFromCart, getCartItems ,editCart};

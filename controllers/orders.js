@@ -10,10 +10,11 @@ const createOrder = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
-
+    const totalPrice = items.reduce((total, item) => total + item.price * item.quantity, 0);
     const newOrder = new Order({
       address,
-      items, // items: [{ product: ObjectId, quantity: Number }]
+      items,
+      totalPrice: totalPrice +shippingFee,
       shippingFee: Math.round((Math.random() * 100) % 51),
     });
 
