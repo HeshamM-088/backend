@@ -8,7 +8,7 @@ cartRouter.post("/", addToCart);
 cartRouter.delete("/", deleteFromCart);
 
 cartRouter.get("/:uid", getCartItems);
-cartRouter.patch("/:userId",editCart)
+cartRouter.patch("/:id",editCart)
 
 
 module.exports = cartRouter;
