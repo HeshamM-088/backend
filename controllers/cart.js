@@ -46,9 +46,11 @@ const addToCart = async (req, res) => {
       .populate("cartItems.productId").lean();
 
     res.status(200).json({
+       userId:addUser._id,
       message: "Product added to cart successfully",
-      cartItems: addUser.cartItems,
-    });
+      cartItems: populatedItems.cartItems,  
+     });
+     
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -134,7 +136,7 @@ const getCartItems = async (req, res) => {
 
 
 const editCart = async (req, res) => {
-   const { userId } = req.params;
+   const userId = req.params.id;
    const {  productId, quantity } = req.body;
   if (
       !mongoose.Types.ObjectId.isValid(productId) ||
@@ -151,10 +153,13 @@ const editCart = async (req, res) => {
     }
     if (quantity === 0) {
       user.cartItems = user.cartItems.filter(item => item.productId.toString() !== productId);
+      await user.save();
+      res.status(200).json({ cartItems: user.cartItems });
     } else {
       item.quantity = quantity;
       await user.save();
-      res.status(200).json({ cartItems: user.cartItems });
+      const populatedUser = await User.findById(userId).populate("cartItems.productId").lean(); 
+      res.status(200).json({ cartItems: populatedUser.cartItems });
     }
   } catch (error) {
       res.status(500).json({ message: error.message });
