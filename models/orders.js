@@ -31,6 +31,11 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: [0, "Shipping fee cannot be negative"],
     },
+    totalPrice: {
+      type: Number,
+      required : true,
+      min: [0, "Price fee cannot be negative"],
+    },
     date: {
       type: Date,
       default: Date.now,

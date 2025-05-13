@@ -4,19 +4,14 @@ const User = require("../models/users");
 const mongoose = require("mongoose");
 
 const createOrder = async (req, res) => {
+  const userId = req.params.uid;
   try {
-    const { userId, address, items } = req.body;
+    const userOrder = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
-    const totalPrice = items.reduce((total, item) => total + item.price * item.quantity, 0);
-    const newOrder = new Order({
-      address,
-      items,
-      totalPrice: totalPrice +shippingFee,
-      shippingFee: Math.round((Math.random() * 100) % 51),
-    });
+    const newOrder = new Order(userOrder);
 
     const savedOrder = await newOrder.save();
 
@@ -28,10 +23,7 @@ const createOrder = async (req, res) => {
     );
 
     // Populate products inside items
-    const populatedOrder = await savedOrder.populate({
-      path: "items.product", // Populate the product inside items
-      model: "Product" // Make sure the 'Product' model is correct
-    });
+    const populatedOrder = await savedOrder.populate("items.product");
 
     res.status(201).json(populatedOrder); // Return the populated order
   } catch (error) {
