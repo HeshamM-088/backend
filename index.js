@@ -28,7 +28,7 @@ mongoose
     console.log(err);
   });
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   return res.status(200).json({
     msg: "done for home page",
   });
@@ -49,9 +49,9 @@ app.listen(PORT, () => {
 // //=======================
 // console.log("JWT_SECRET =", process.env.JWT_SECRET);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
 //=======================
 
 app.use((req, res) => {
