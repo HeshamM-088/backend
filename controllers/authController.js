@@ -27,15 +27,8 @@ exports.signup = async (req, res) => {
     const token = createToken(newUser._id, newUser.role);
 
     res.status(201).json({
-      status: "success",
-      token,
-      user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-        image: newUser.image,
-      },
+      status: " User registered successfully",
+      
     });
   } catch (err) {
     res.status(400).json({
@@ -68,13 +61,11 @@ exports.login = async (req, res) => {
     const token = createToken(user._id, user.role);
 
     res.status(200).json({
-      status: "success",
+      status: " Login success",
       token,
       user: {
         id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+      
       },
     });
   } catch (err) {
