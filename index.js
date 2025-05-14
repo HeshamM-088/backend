@@ -28,11 +28,11 @@ mongoose
     console.log(err);
   });
 
-// app.use("/", (req, res) => {
-//   return res.status(200).json({
-//     msg: "done for home page",
-//   });
-// });
+app.get("/", (req, res) => {
+  return res.status(200).json({
+    msg: "done for home page",
+  });
+});
 
 app.use("/api/products", router);
 app.use("/api/users", router2);
@@ -40,10 +40,9 @@ app.use("/api/orders", router3);
 app.use("/api/auth", router4);
 app.use("/api/cart", cartRouter);
 app.use("/api/wishlist", wishlistRouter);
+ 
 
-//=======================
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
+ // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
 //=======================
