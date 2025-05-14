@@ -8,7 +8,7 @@ const {
 } = require("../controllers/orders");
 
 // Create order
-router3.post("/", createOrder);
+router3.post("/:uid", createOrder);
 
 // Get all orders for a specific user
 router3.get("/:uid", getAllOrdersByUser);

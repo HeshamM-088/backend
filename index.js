@@ -40,16 +40,9 @@ app.use("/api/orders", router3);
 app.use("/api/auth", router4);
 app.use("/api/cart", cartRouter);
 app.use("/api/wishlist", wishlistRouter);
+ 
 
-//=======================
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-// //=======================
-// console.log("JWT_SECRET =", process.env.JWT_SECRET);
-
-// app.listen(PORT, () => {
+ // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
 //=======================
