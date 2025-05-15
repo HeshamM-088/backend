@@ -44,7 +44,7 @@ const getAllOrdersByUser = async (req, res) => {
       path: "orders", // Orders of the user
       populate: {
         path: "items.product", // Populate the product inside items
-        model: "Product", // Ensure to link the Product model correctly
+        model: "products", // Ensure to link the Product model correctly
       },
     });
 
