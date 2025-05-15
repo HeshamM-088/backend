@@ -3,6 +3,12 @@ const Order = require("../models/orders");
 const User = require("../models/users");
 const mongoose = require("mongoose");
 
+const orders = require("../models/orders");
+const Order = require("../models/orders");
+const User = require("../models/users");
+const Product = require("../models/products"); // ضروري تضيف دي
+const mongoose = require("mongoose");
+
 const createOrder = async (req, res) => {
   const userId = req.params.uid;
   try {
@@ -11,25 +17,45 @@ const createOrder = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
-    const newOrder = new Order(userOrder);
 
+    for (const item of userOrder.items) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res.status(404).json({ message: `Product ${item.product} not found` });
+      }
+
+      if (product.stock < item.quantity) {
+        return res.status(400).json({
+          message: `Not enough stock for product ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`
+        });
+      }
+    }
+
+    const newOrder = new Order(userOrder);
     const savedOrder = await newOrder.save();
 
-    // Link the order to the user
     await User.findByIdAndUpdate(
       userId,
       { $push: { orders: savedOrder._id } },
       { new: true }
     );
 
-    // Populate products inside items
+    for (const item of userOrder.items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: -item.quantity }
+      });
+    }
+
     const populatedOrder = await savedOrder.populate("items.product");
 
-    res.status(201).json(populatedOrder); // Return the populated order
+    res.status(201).json(populatedOrder);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 
 
