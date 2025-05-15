@@ -120,7 +120,7 @@ const getCartItems = async (req, res) => {
       const product = await Product.findById(item.productId); 
       if (product) {
         cartItems.push({
-          product, 
+          productId: product,  
           quantity: item.quantity,
         });
       }
