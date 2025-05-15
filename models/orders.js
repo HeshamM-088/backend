@@ -12,6 +12,12 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "shipped", "cancelled"],
       default: "pending",
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
+
     items: [
       {
         product: {
@@ -33,7 +39,7 @@ const orderSchema = new mongoose.Schema(
     },
     totalPrice: {
       type: Number,
-      required : true,
+      required: true,
       min: [0, "Price fee cannot be negative"],
     },
     date: {

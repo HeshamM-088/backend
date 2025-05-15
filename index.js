@@ -41,10 +41,10 @@ app.use("/api/auth", router4);
 app.use("/api/cart", cartRouter);
 app.use("/api/wishlist", wishlistRouter);
  
-
- // app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+const PORT = 3000;
+ app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 //=======================
 
 app.use((req, res) => {
