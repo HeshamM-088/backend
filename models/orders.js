@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
+     user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
     address: {
       type: String,
       required: true,
@@ -12,7 +17,7 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "shipped", "cancelled"],
       default: "pending",
     },
-
+   
     items: [
       {
         product: {
