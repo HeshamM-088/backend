@@ -3,7 +3,7 @@ const User = require("../models/users");
 const Product = require("../models/product");
 const mongoose = require("mongoose");
 
- const createOrder = async (req, res) => {
+const createOrder = async (req, res) => {
   const userId = req.params.uid;
   try {
     const userOrder = req.body;
@@ -13,11 +13,10 @@ const mongoose = require("mongoose");
     const newOrder = new Order(userOrder);
 
     const savedOrder = await newOrder.save();
- 
+
     const populatedOrder = await savedOrder.populate("items.product");
 
     res.status(201).json(populatedOrder);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -133,9 +132,23 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find().populate({
+      path: "items.product",
+      model: "products",
+    });
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createOrder,
   getAllOrdersByUser,
   getSingleOrderByUser,
   cancelOrder,
+  getAllOrders,
 };

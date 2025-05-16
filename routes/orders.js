@@ -5,6 +5,7 @@ const {
   getAllOrdersByUser,
   getSingleOrderByUser,
   cancelOrder,
+  getAllOrders,
 } = require("../controllers/orders");
 
 // Create order
@@ -18,4 +19,5 @@ router3.get("/:uid/:oid", getSingleOrderByUser);
 
 router3.delete("/", cancelOrder);
 
+router3.get("/", getAllOrders);
 module.exports = router3;

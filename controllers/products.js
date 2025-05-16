@@ -9,16 +9,6 @@ const getProducts = async (req, res) => {
   }
 };
 
-// const createProduct = async (req, res) => {
-//   try {
-//     const product = await Product.create(req.body); //check with the middleware
-
-//     res.status(201).json({ product });
-//   } catch {
-//     res.status(500).json({ msg: err });
-//   }
-// };
-
 const createProduct = async (req, res) => {
   try {
     const {
