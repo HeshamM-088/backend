@@ -3,18 +3,32 @@ const User = require("../models/users");
 const Product = require("../models/product");
 const mongoose = require("mongoose");
 
-const createOrder = async (req, res) => {
-  const userId = req.params.uid;
+ 
+ const createOrder = async (req, res) => {
+   const { userId, address, items, shippingFee, totalPrice } = req.body;
+   
   try {
-    const userOrder = req.body;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
-    const newOrder = new Order(userOrder);
-
-    const savedOrder = await newOrder.save();
-
-    const populatedOrder = await savedOrder.populate("items.product");
+ 
+    const order = new Order({
+      user: userId,
+      address,
+      items,
+      shippingFee,
+      totalPrice,
+    });
+    const savedOrder = await order.save();
+     await User.findByIdAndUpdate(
+      userId,
+      { $push: { orders: savedOrder._id } },
+      { new: true }
+    );
+    const populatedOrder = await Order.findById(savedOrder._id) .populate("items.product");
+=======
+ 
+ 
 
     res.status(201).json(populatedOrder);
   } catch (error) {
@@ -35,7 +49,7 @@ const getAllOrdersByUser = async (req, res) => {
       path: "orders",
       populate: {
         path: "items.product",
-        model: "Product",
+        model: "products",
       },
     });
 
@@ -52,31 +66,29 @@ const getAllOrdersByUser = async (req, res) => {
 // جلب طلب واحد فقط بموجب المستخدم
 const getSingleOrderByUser = async (req, res) => {
   try {
-    const { userId, orderId } = req.params;
+        const { uid, oid } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+
+    if (!mongoose.Types.ObjectId.isValid(uid)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      return res.status(400).json({ message: `Invalid order ID: ${orderId}` });
+    if (!mongoose.Types.ObjectId.isValid(oid)) {
+      return res.status(400).json({ message: `Invalid order ID: ${oid}` });
     }
 
-    const user = await User.findById(userId);
+    const user = await User.findById(uid);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    if (!user.orders.includes(orderId)) {
+    if (!user.orders.includes(oid)) {
       return res.status(403).json({
-        error: `Order does not belong to this user ${userId} ${orderId}`,
+        error: `Order does not belong to this user ${uid} ${oid}`,
       });
     }
 
-    const order = await Order.findById(orderId).populate({
-      path: "items.product",
-      model: "Product",
-    });
+    const order = await Order.findById(oid).populate("items.product");
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
