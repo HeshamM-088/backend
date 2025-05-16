@@ -3,13 +3,15 @@ const User = require("../models/users");
 const Product = require("../models/product");
 const mongoose = require("mongoose");
 
+ 
  const createOrder = async (req, res) => {
    const { userId, address, items, shippingFee, totalPrice } = req.body;
-    
+   
   try {
      if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
+ 
     const order = new Order({
       user: userId,
       address,
@@ -24,9 +26,11 @@ const mongoose = require("mongoose");
       { new: true }
     );
     const populatedOrder = await Order.findById(savedOrder._id) .populate("items.product");
+=======
+ 
+ 
 
     res.status(201).json(populatedOrder);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -140,9 +144,23 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find().populate({
+      path: "items.product",
+      model: "products",
+    });
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createOrder,
   getAllOrdersByUser,
   getSingleOrderByUser,
   cancelOrder,
+  getAllOrders,
 };

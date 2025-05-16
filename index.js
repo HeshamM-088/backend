@@ -40,12 +40,11 @@ app.use("/api/orders", router3);
 app.use("/api/auth", router4);
 app.use("/api/cart", cartRouter);
 app.use("/api/wishlist", wishlistRouter);
- 
+
 // const PORT = 3000;
-//  app.listen(PORT, () => {
+// app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
-//=======================
 
 app.use((req, res) => {
   return res.status(404).json({
@@ -55,5 +54,3 @@ app.use((req, res) => {
 });
 
 module.exports = app;
-
- 
