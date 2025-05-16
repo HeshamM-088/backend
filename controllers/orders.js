@@ -3,55 +3,21 @@ const User = require("../models/users");
 const Product = require("../models/product");
 const mongoose = require("mongoose");
 
-// إنشاء طلب جديد
-const createOrder = async (req, res) => {
+ const createOrder = async (req, res) => {
   const userId = req.params.uid;
-
   try {
     const userOrder = req.body;
-
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
-
-    // التأكد من كل منتج أنه موجود وفيه مخزون كافي
-    for (const item of userOrder.items) {
-      const product = await Product.findById(item.product);
-      if (!product) {
-        return res
-          .status(404)
-          .json({ message: `Product ${item.product} not found` });
-      }
-
-      if (product.stock < item.quantity) {
-        return res.status(400).json({
-          message: `Not enough stock for product ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`,
-        });
-      }
-    }
-
-    // إنشاء الطلب
     const newOrder = new Order(userOrder);
+
     const savedOrder = await newOrder.save();
-
-    // ربط الطلب بالمستخدم
-    await User.findByIdAndUpdate(
-      userId,
-      { $push: { orders: savedOrder._id } },
-      { new: true }
-    );
-
-    // تحديث المخزون
-    for (const item of userOrder.items) {
-      await Product.findByIdAndUpdate(item.product, {
-        $inc: { stock: -item.quantity },
-      });
-    }
-
-    // إرجاع الطلب مع المنتجات
+ 
     const populatedOrder = await savedOrder.populate("items.product");
 
     res.status(201).json(populatedOrder);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

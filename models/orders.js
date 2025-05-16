@@ -12,11 +12,6 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "shipped", "cancelled"],
       default: "pending",
     },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-      required: true,
-    },
 
     items: [
       {
