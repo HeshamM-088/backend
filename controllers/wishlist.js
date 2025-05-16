@@ -43,7 +43,8 @@ const addToWishlist = async (req, res) => {
       user.wishlist.push(productId);
     }
     await user.save();
-    res.status(200).json({ message: "Item is added", wishlist: user.wishlist });
+    const updatedUser = await User.findById(userId).populate("wishlist");
+    res.status(200).json({ message: "Item is added", wishlist: updatedUser.wishlist });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
