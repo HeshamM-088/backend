@@ -41,7 +41,7 @@ app.use("/api/auth", router4);
 app.use("/api/cart", cartRouter);
 app.use("/api/wishlist", wishlistRouter);
 
-// const PORT = 3000;
+const PORT = 3000;
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });

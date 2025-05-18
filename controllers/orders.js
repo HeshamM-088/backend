@@ -4,25 +4,35 @@ const Product = require("../models/product");
 const mongoose = require("mongoose");
 
 const createOrder = async (req, res) => {
-  const userId = req.params.uid;
+  const { userId, address, items, shippingFee, totalPrice } = req.body;
+
   try {
-    const userOrder = req.body;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid User ID" });
     }
-    const newOrder = new Order(userOrder);
-
-    const savedOrder = await newOrder.save();
-
-    const populatedOrder = await savedOrder.populate("items.product");
+    const order = new Order({
+      user: userId,
+      address,
+      items,
+      shippingFee,
+      totalPrice,
+    });
+    const savedOrder = await order.save();
+    await User.findByIdAndUpdate(
+      userId,
+      { $push: { orders: savedOrder._id } },
+      { new: true }
+    );
+    const populatedOrder = await Order.findById(savedOrder._id).populate(
+      "items.product"
+    );
 
     res.status(201).json(populatedOrder);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-// جلب كل الطلبات الخاصة بمستخدم
+// Get All Orders 
 const getAllOrdersByUser = async (req, res) => {
   try {
     const userId = req.params.uid;
@@ -49,7 +59,7 @@ const getAllOrdersByUser = async (req, res) => {
   }
 };
 
-// جلب طلب واحد فقط بموجب المستخدم
+//Get Single Order By User
 const getSingleOrderByUser = async (req, res) => {
   try {
     const { userId, orderId } = req.params;
@@ -88,7 +98,7 @@ const getSingleOrderByUser = async (req, res) => {
   }
 };
 
-// إلغاء الطلب
+// Cancel Order
 const cancelOrder = async (req, res) => {
   try {
     const { userId, orderId } = req.body;
